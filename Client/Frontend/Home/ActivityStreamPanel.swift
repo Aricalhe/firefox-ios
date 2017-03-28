@@ -266,7 +266,8 @@ extension ActivityStreamPanel: UICollectionViewDelegateFlowLayout {
             }
             return cellSize
         case .topSites:
-            return CGSize(width: cellSize.width, height: cellSize.height + ASPanelUX.PageControlOffsetSize)
+            //if there is more than one page of space. then add the pagecontrol offset.
+            return CGSize(width: cellSize.width, height: cellSize.height)
         case .highlightIntro:
             //if we should show the highlight intro return cellSize
             return CGSize.zero
@@ -287,11 +288,11 @@ extension ActivityStreamPanel: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
 
-        let inset = UIDevice.current.userInterfaceIdiom == .pad ? ASPanelUX.SectionInsetsForIpad : ASPanelUX.SectionInsetsForIphone
+        let inset = UIDevice.current.userInterfaceIdiom == .pad ? ASPanelUX.SectionInsetsForIpad + ASHorizontalScrollCellUX.MinimumInsets : ASPanelUX.SectionInsetsForIphone
         let topSitesInsets = UIDevice.current.userInterfaceIdiom == .pad ? ASPanelUX.SectionInsetsForIpad : 0
 
         if section == Section.highlights.rawValue {
-            return UIEdgeInsets(top: ASPanelUX.SectionInsetsForIphone, left: inset, bottom: 0, right: inset)
+            return UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
         }
 
         // topsites insets
@@ -690,9 +691,9 @@ class ASHeaderView: UICollectionReusableView {
         super.init(frame: frame)
 
         addSubview(titleLabel)
-
+        let leftInset = UIDevice.current.userInterfaceIdiom == .pad ? ASHorizontalScrollCellUX.MinimumInsets : 0
         titleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(self).inset(ASHeaderViewUX.Insets)
+            make.leading.equalTo(self).inset(ASHeaderViewUX.Insets + leftInset)
             make.trailing.equalTo(self).inset(-ASHeaderViewUX.Insets)
             make.top.equalTo(self).inset(ASHeaderViewUX.TitleTopInset)
             make.bottom.equalTo(self)
@@ -700,7 +701,7 @@ class ASHeaderView: UICollectionReusableView {
         
         let seperatorLine = UIView()
         seperatorLine.backgroundColor = ASHeaderViewUX.SeperatorColor
-        self.backgroundColor = UIColor.red
+        self.backgroundColor = UIColor.clear
         addSubview(seperatorLine)
         seperatorLine.snp.makeConstraints { make in
             make.height.equalTo(ASHeaderViewUX.SeperatorHeight)

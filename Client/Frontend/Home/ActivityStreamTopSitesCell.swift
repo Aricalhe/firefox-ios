@@ -158,6 +158,7 @@ struct ASHorizontalScrollCellUX {
     static let PageControlRadius: CGFloat = 3
     static let PageControlSize = CGSize(width: 30, height: 15)
     static let PageControlOffset: CGFloat = 20
+    static let MinimumInsets: CGFloat = 15
 }
 
 /*
@@ -188,13 +189,6 @@ class ASHorizontalScrollCell: UICollectionViewCell {
         return pageControl
     }()
 
-    lazy fileprivate var gradientBG: CAGradientLayer = {
-        let gradient: CAGradientLayer = CAGradientLayer()
-        gradient.frame = self.contentView.bounds
-        gradient.colors = [UIColor.white.cgColor, UIColor(colorString: "f9f9f9").cgColor]
-        return gradient
-    }()
-
     lazy fileprivate var pageControlPress: UITapGestureRecognizer = {
         let press = UITapGestureRecognizer(target: self, action: #selector(ASHorizontalScrollCell.handlePageTap(_:)))
    //     press.delegate = self
@@ -220,28 +214,23 @@ class ASHorizontalScrollCell: UICollectionViewCell {
         accessibilityIdentifier = "TopSitesCell"
         backgroundColor = UIColor.clear
         contentView.addSubview(collectionView)
-        contentView.addSubview(pageControl)
+       // contentView.addSubview(pageControl)
         pageControl.addGestureRecognizer(self.pageControlPress)
 
         collectionView.snp.makeConstraints { make in
             make.edges.equalTo(contentView)
         }
 
-        pageControl.snp.makeConstraints { make in
-            make.size.equalTo(ASHorizontalScrollCellUX.PageControlSize)
-            make.top.equalTo(collectionView.snp.bottom).inset(ASHorizontalScrollCellUX.PageControlOffset)
-            make.centerX.equalTo(self.snp.centerX)
-        }
+//        pageControl.snp.makeConstraints { make in
+//            make.size.equalTo(ASHorizontalScrollCellUX.PageControlSize)
+//            make.top.equalTo(collectionView.snp.bottom).inset(ASHorizontalScrollCellUX.PageControlOffset)
+//            make.centerX.equalTo(self.snp.centerX)
+//        }
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
         let layout = collectionView.collectionViewLayout as! HorizontalFlowLayout
-
-        gradientBG.frame = contentView.bounds
-        if gradientBG.superlayer == nil {
-            contentView.layer.insertSublayer(gradientBG, at: 0)
-        }
 
         pageControl.pageCount = layout.numberOfPages()
         pageControl.isHidden = pageControl.pageCount <= 1
@@ -288,7 +277,6 @@ class HorizontalFlowLayout: UICollectionViewLayout {
     }
     fileprivate var boundsSize = CGSize.zero
     fileprivate var insets = UIEdgeInsets.zero
-    fileprivate let minimumInsets: CGFloat = 15
 
     override func prepare() {
         super.prepare()
@@ -313,9 +301,9 @@ class HorizontalFlowLayout: UICollectionViewLayout {
 
         // We want a minimum inset to make things not look crowded. We also don't want uneven spacing.
         // If we dont have this. Set a minimum inset and recalculate the size of a cell
-        if horizontalInsets < minimumInsets || horizontalInsets != verticalInsets {
-            verticalInsets = minimumInsets
-            horizontalInsets = minimumInsets
+        if horizontalInsets < ASHorizontalScrollCellUX.MinimumInsets || horizontalInsets != verticalInsets {
+            verticalInsets = ASHorizontalScrollCellUX.MinimumInsets
+            horizontalInsets = ASHorizontalScrollCellUX.MinimumInsets
             itemSize.width = (contentSize.width - (CGFloat(horizontalItemsCount + 1) * horizontalInsets)) / CGFloat(horizontalItemsCount)
             itemSize.height = itemSize.width + TopSiteCellUX.TitleHeight
         }
