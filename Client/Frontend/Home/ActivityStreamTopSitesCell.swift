@@ -102,10 +102,6 @@ class TopSiteItemCell: UICollectionViewCell {
             make.bottom.equalTo(self).inset(TopSiteCellUX.TitleHeight)
         }
 
-        // The titleBorder must appear ABOVE the titleLabel. Meaning it must be 0.5 pixels above of the titleWrapper frame.
-     //   titleBorder.frame = CGRect(x: 0, y: self.frame.height - TopSiteCellUX.TitleHeight -  TopSiteCellUX.BorderWidth, width: self.frame.width, height: TopSiteCellUX.BorderWidth)
-        //self.contentView.layer.addSublayer(titleBorder)
-
     }
 
     override func layoutSubviews() {
@@ -231,17 +227,6 @@ class ASHorizontalScrollCell: UICollectionViewCell {
 //        }
     }
 
-    
-//
-//    override func preferredLayoutAttributesFitting(_ layoutAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
-//        let attributes = super.preferredLayoutAttributesFitting(layoutAttributes)
-//
-//        let layout = collectionView.collectionViewLayout as! HorizontalFlowLayout
-//        attributes.frame.size.height = layout.calculateContentSize(with: attributes.frame.size.width, height: 0).height
-//        attributes.size.height = attributes.frame.size.height
-//        return attributes
-//    }
-
     override func layoutSubviews() {
         super.layoutSubviews()
         let layout = collectionView.collectionViewLayout as! HorizontalFlowLayout
@@ -305,14 +290,15 @@ class HorizontalFlowLayout: UICollectionViewLayout {
 
 
 
-    func calculateContentSize(with width: CGFloat, height: CGFloat) -> CGSize {
-        if width == 0 {
-            return CGSize.zero
+    func calculateLayout(for size: CGSize) -> (size: CGSize, cellSize: CGSize, cellInsets: UIEdgeInsets) {
+        let width = size.width
+        let height = size.height
+        guard width != 0 else {
+            return (size: CGSize.zero, cellSize: self.itemSize, cellInsets: self.insets)
         }
 
         let horizontalItemsCount = maxHorizontalItemsCount(width: width)
         let verticalItemsCount = maxVerticalItemsCount(height: height)
-
 
         // Take the number of cells and subtract its space in the view from the height. The left over space is the white space.
         // The left over space is then devided evenly into (n + 1) parts to figure out how much space should be inbetween a cell
@@ -329,54 +315,19 @@ class HorizontalFlowLayout: UICollectionViewLayout {
             estimatedItemSize.height = estimatedItemSize.width + TopSiteCellUX.TitleHeight
         }
 
-        //calculate height. for autolayout and automatic content sizing in UICollectionView
-        var estimatedHeight = (estimatedItemSize.height * CGFloat(verticalItemsCount)) + (verticalInsets * (CGFloat(verticalItemsCount) + 1))
-        if estimatedHeight < 0 {
-            estimatedHeight = 0
-        }
-        insets = UIEdgeInsets(top: verticalInsets, left: horizontalInsets, bottom: verticalInsets, right: horizontalInsets)
-
-        //let insets = UIEdgeInsets(top: verticalInsets, left: horizontalInsets, bottom: verticalInsets, right: horizontalInsets)
-        var size = CGSize(width: CGFloat(numberOfPages()) * width, height: estimatedHeight)
-        return size
+        //calculate our estimates.
+        let estimatedHeight = (estimatedItemSize.height * CGFloat(verticalItemsCount)) + (verticalInsets * (CGFloat(verticalItemsCount) + 1))
+        let estimatedSize = CGSize(width: CGFloat(numberOfPages()) * width, height: estimatedHeight)
+        let estimatedInsets = UIEdgeInsets(top: verticalInsets, left: horizontalInsets, bottom: verticalInsets, right: horizontalInsets)
+        return (size: estimatedSize, cellSize: estimatedItemSize, cellInsets: estimatedInsets)
     }
 
     override var collectionViewContentSize: CGSize {
-        var contentSize = boundsSize
-        if contentSize.width == 0 {
-            return CGSize(width: 0, height: 0)
-        }
-        let horizontalItemsCount = maxHorizontalItemsCount(width: contentSize.width)
-        let verticalItemsCount = maxVerticalItemsCount(height: contentSize.height)
-
-
-        // Take the number of cells and subtract its space in the view from the height. The left over space is the white space.
-        // The left over space is then devided evenly into (n + 1) parts to figure out how much space should be inbetween a cell
-        var verticalInsets = (contentSize.height - (CGFloat(verticalItemsCount) * itemSize.height)) / CGFloat(verticalItemsCount + 1)
-        var horizontalInsets = (contentSize.width - (CGFloat(horizontalItemsCount) * itemSize.width)) / CGFloat(horizontalItemsCount + 1)
-
-        // We want a minimum inset to make things not look crowded. We also don't want uneven spacing.
-        // If we dont have this. Set a minimum inset and recalculate the size of a cell
-        if horizontalInsets < ASHorizontalScrollCellUX.MinimumInsets || horizontalInsets != verticalInsets {
-            verticalInsets = ASHorizontalScrollCellUX.MinimumInsets
-            horizontalInsets = ASHorizontalScrollCellUX.MinimumInsets
-            itemSize.width = (contentSize.width - (CGFloat(horizontalItemsCount + 1) * horizontalInsets)) / CGFloat(horizontalItemsCount)
-            itemSize.height = itemSize.width + TopSiteCellUX.TitleHeight
-        }
-
-        //calculate height. for autolayout and automatic content sizing in UICollectionView
-        var height = (itemSize.height * CGFloat(verticalItemsCount)) + (verticalInsets * (CGFloat(verticalItemsCount) + 1))
-        if height < 0 {
-            height = 0
-        }
-
-        insets = UIEdgeInsets(top: verticalInsets, left: horizontalInsets, bottom: verticalInsets, right: horizontalInsets)
-        var size = contentSize
-        size.width = CGFloat(numberOfPages()) * contentSize.width
-        size.height = height
-        boundsSize.height = height
-    
-        return size
+        let estimatedLayout = calculateLayout(for: boundsSize)
+        insets = estimatedLayout.cellInsets
+        itemSize = estimatedLayout.cellSize
+        boundsSize.height = estimatedLayout.size.height
+        return estimatedLayout.size
     }
 
     func maxVerticalItemsCount(height: CGFloat) -> Int {

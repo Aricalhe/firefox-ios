@@ -20,14 +20,6 @@ struct ASPanelUX {
     static let rowSpacing: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? 30 : 20
     static let highlightCellHeight: CGFloat = UIDevice.current.userInterfaceIdiom == .pad ? 250 : 195
 
-    // These ratios repersent how much space the topsites require.
-    // They are calculated from the iphone 5 which requires 220px of vertical height on a 320px width screen.
-    // 320/220 = 1.4545.
-    static let TopSiteDoubleRowRatio: CGFloat = 1.27
-    static let TopSiteDoubleRowLargeRatio: CGFloat = 1.7 //used to show 4 columned topsites on larger width devices
-    static let TopSiteSingleRowRatio: CGFloat = 4.4
-    static let TopSiteIpadSingleRowHorizontalRatio: CGFloat = 4
-    static let TopSiteIpadSingleRowVerticalRatio: CGFloat = 3.2
     static let PageControlOffsetSize: CGFloat = 40
     static let SectionInsetsForIpad: CGFloat = 100
     static let SectionInsetsForIphone: CGFloat = 14
@@ -146,20 +138,7 @@ extension ActivityStreamPanel {
             switch self {
             case .highlights: return ASPanelUX.highlightCellHeight
             case .topSites:
-                if traits.horizontalSizeClass == .compact && traits.verticalSizeClass == .regular {
-                    // On more compact width devices (iPhone SE) we force a 3 column layout
-                    if width > ASPanelUX.CompactWidth {
-                        return CGFloat(Int(width / ASPanelUX.TopSiteDoubleRowLargeRatio))
-                    } else {
-                        return CGFloat(Int(width / ASPanelUX.TopSiteDoubleRowRatio))
-                    }
-                } else {
-                    if UIDevice.current.orientation == .landscapeLeft || UIDevice.current.orientation == .landscapeRight {
-                        return CGFloat(Int(width / ASPanelUX.TopSiteIpadSingleRowHorizontalRatio))
-                    } else {
-                        return CGFloat(Int(width / ASPanelUX.TopSiteIpadSingleRowVerticalRatio))
-                    }
-                }
+                return 0
             case .highlightIntro: return UITableViewAutomaticDimension
             }
         }
@@ -221,8 +200,8 @@ extension ActivityStreamPanel {
         var cellType: UICollectionViewCell.Type {
             switch self {
             case .topSites: return ASHorizontalScrollCell.self
-            case .highlights: return AlternateSimpleHighlightCell.self
-            case .highlightIntro: return AlternateSimpleHighlightCell.self //TODO
+            case .highlights: return ActivityStreamHighlightCell.self
+            case .highlightIntro: return ActivityStreamHighlightCell.self //TODO
             }
         }
 
@@ -268,12 +247,12 @@ extension ActivityStreamPanel: UICollectionViewDelegateFlowLayout {
             }
             return cellSize
         case .topSites:
-            //if there is more than one page of space. then add the pagecontrol offset.
+            // Create a temporary cell so we can calculate the height.
             let customCell = ASHorizontalScrollCell(frame: CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: 0))
             customCell.delegate = topSitesManager
             let layout = customCell.collectionView.collectionViewLayout as! HorizontalFlowLayout
-            let size = layout.calculateContentSize(with: self.view.frame.size.width, height: 0)
-            return CGSize(width: cellSize.width, height: size.height)
+            let estimatedLayout = layout.calculateLayout(for: CGSize(width: self.view.frame.size.width, height: 0))
+            return CGSize(width: cellSize.width, height: estimatedLayout.size.height)
         case .highlightIntro:
             //if we should show the highlight intro return cellSize
             return CGSize.zero
@@ -352,7 +331,7 @@ extension ActivityStreamPanel {
 
     func configureHistoryItemCell(_ cell: UICollectionViewCell, forIndexPath indexPath: IndexPath) -> UICollectionViewCell {
         let site = highlights[indexPath.row]
-        let simpleHighlightCell = cell as! AlternateSimpleHighlightCell
+        let simpleHighlightCell = cell as! ActivityStreamHighlightCell
         simpleHighlightCell.configureWithSite(site)
         return simpleHighlightCell
     }
@@ -494,7 +473,7 @@ extension ActivityStreamPanel {
     }
 
     func presentContextMenuForHighlightCellWithIndexPath(_ indexPath: IndexPath) {
-        guard let highlightCell = self.collectionView?.cellForItem(at: indexPath) as? AlternateSimpleHighlightCell else { return }
+        guard let highlightCell = self.collectionView?.cellForItem(at: indexPath) as? ActivityStreamHighlightCell else { return }
         let siteImage = highlightCell.siteImageView.image
         let siteBGColor = highlightCell.siteImageView.backgroundColor
 
