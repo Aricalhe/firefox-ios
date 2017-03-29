@@ -272,8 +272,6 @@
 		741258A61D90B43E0064FC2A /* ActionOverlayTableViewAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741258A51D90B43E0064FC2A /* ActionOverlayTableViewAction.swift */; };
 		7416486A1D88B8A000FF22C6 /* ActionOverlayTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 741648691D88B8A000FF22C6 /* ActionOverlayTableViewCell.swift */; };
 		742A56391D80B54A00BDB803 /* ActionOverlayTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 742A56381D80B54A00BDB803 /* ActionOverlayTableViewController.swift */; };
-		744501E31D6277C800BCD523 /* HighlightCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744501E21D6277C800BCD523 /* HighlightCell.swift */; };
-		744501F21D6277DD00BCD523 /* SimpleHighlightCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744501F11D6277DD00BCD523 /* SimpleHighlightCell.swift */; };
 		744B0FFE1B4F172E00100422 /* ToolbarTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744B0FFD1B4F172E00100422 /* ToolbarTests.swift */; };
 		744ED5611DBFEB8D00A2B5BE /* MailtoLinkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 744ED5601DBFEB8D00A2B5BE /* MailtoLinkHandler.swift */; };
 		745DAB301CDAAFAA00D44181 /* RecentlyClosedTabsPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 745DAB2F1CDAAFAA00D44181 /* RecentlyClosedTabsPanel.swift */; };
@@ -1451,8 +1449,6 @@
 		741258A51D90B43E0064FC2A /* ActionOverlayTableViewAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionOverlayTableViewAction.swift; sourceTree = "<group>"; };
 		741648691D88B8A000FF22C6 /* ActionOverlayTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionOverlayTableViewCell.swift; sourceTree = "<group>"; };
 		742A56381D80B54A00BDB803 /* ActionOverlayTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionOverlayTableViewController.swift; sourceTree = "<group>"; };
-		744501E21D6277C800BCD523 /* HighlightCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HighlightCell.swift; sourceTree = "<group>"; };
-		744501F11D6277DD00BCD523 /* SimpleHighlightCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleHighlightCell.swift; sourceTree = "<group>"; };
 		744B0FFD1B4F172E00100422 /* ToolbarTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToolbarTests.swift; sourceTree = "<group>"; };
 		744ED5601DBFEB8D00A2B5BE /* MailtoLinkHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MailtoLinkHandler.swift; sourceTree = "<group>"; };
 		745DAB2F1CDAAFAA00D44181 /* RecentlyClosedTabsPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecentlyClosedTabsPanel.swift; sourceTree = "<group>"; };
@@ -2810,8 +2806,6 @@
 				0BB5B2871AC0A2B90052877D /* Toolbar.swift */,
 				59A68B1F857A8638598A63A0 /* TwoLineCell.swift */,
 				745DAB3E1CDAB09E00D44181 /* HistoryBackButton.swift */,
-				744501E21D6277C800BCD523 /* HighlightCell.swift */,
-				744501F11D6277DD00BCD523 /* SimpleHighlightCell.swift */,
 				742A56381D80B54A00BDB803 /* ActionOverlayTableViewController.swift */,
 				741648691D88B8A000FF22C6 /* ActionOverlayTableViewCell.swift */,
 				741258A51D90B43E0064FC2A /* ActionOverlayTableViewAction.swift */,
@@ -5144,7 +5138,6 @@
 				D314E7F71A37B98700426A76 /* TabToolbar.swift in Sources */,
 				E60D03181D511398002FE3F6 /* SyncStatusResolver.swift in Sources */,
 				7B31E6851CBC09DC00A57805 /* MenuPresentationAnimator.swift in Sources */,
-				744501F21D6277DD00BCD523 /* SimpleHighlightCell.swift in Sources */,
 				E689C6FA1E0C6E98008BAADB /* FxAContentViewController.swift in Sources */,
 				C4E3983D1D21F1E7004E89BA /* TopTabsViews.swift in Sources */,
 				3B0943811D6CC4FC004F24E1 /* FilledPageControl.swift in Sources */,
@@ -5163,7 +5156,6 @@
 				E69E06BA1C76173D00D0F926 /* RequirePasscodeIntervalViewController.swift in Sources */,
 				D3BA7E0E1B0E934F00153782 /* ContextMenuHelper.swift in Sources */,
 				7B72E8221CAEC78100FB1D1C /* AppState.swift in Sources */,
-				744501E31D6277C800BCD523 /* HighlightCell.swift in Sources */,
 				E660BE061BB0666D009AC090 /* InnerStrokedView.swift in Sources */,
 				0BF648111A9C54E900BA963C /* TopSitesPanel.swift in Sources */,
 				0B1C05D71A798B1F004C78B0 /* UIImageViewAligned.m in Sources */,

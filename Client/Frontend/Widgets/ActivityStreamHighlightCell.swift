@@ -128,7 +128,7 @@ class ActivityStreamHighlightCell: UICollectionViewCell {
         }
 
         statusIcon.snp.makeConstraints { make in
-            make.size.equalTo(SimpleHighlightCellUX.StatusIconSize)
+            make.size.equalTo(ActivityStreamHighlightCellUX.StatusIconSize)
             make.leading.equalTo(siteImageView)
             make.bottom.equalTo(contentView)
         }
@@ -168,4 +168,70 @@ class ActivityStreamHighlightCell: UICollectionViewCell {
             self.statusIcon.image = UIImage(named: "context_viewed")
         }
     }
+}
+
+struct HighlightIntroCellUX {
+    static let foxImageName = "fox_finder"
+    static let margin: CGFloat = 20
+}
+
+class HighlightIntroCell: UITableViewCell {
+
+    lazy var titleLabel: UILabel = {
+        let textLabel = UILabel()
+        textLabel.font = DynamicFontHelper.defaultHelper.DeviceFontMediumBold
+        textLabel.textColor = UIColor.black
+        textLabel.numberOfLines = 1
+        textLabel.adjustsFontSizeToFitWidth = true
+        textLabel.minimumScaleFactor = 0.8
+        return textLabel
+    }()
+
+    lazy var mainImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: HighlightIntroCellUX.foxImageName)
+        return imageView
+    }()
+
+    lazy var descriptionLabel: UILabel = {
+        let label = UILabel()
+        label.font = DynamicFontHelper.defaultHelper.DeviceFontDescriptionActivityStream
+        label.textColor = UIColor.darkGray
+        label.numberOfLines = 0
+        return label
+    }()
+
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+
+        self.selectionStyle = .none
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(mainImageView)
+        contentView.addSubview(descriptionLabel)
+
+        titleLabel.text = Strings.HighlightIntroTitle
+        descriptionLabel.text = Strings.HighlightIntroDescription
+
+        let titleInsets = UIEdgeInsets(top: HighlightIntroCellUX.margin, left: HighlightIntroCellUX.margin, bottom: 0, right: 0)
+        titleLabel.snp.makeConstraints { make in
+            make.leading.top.equalTo(self.contentView).inset(titleInsets)
+        }
+
+        mainImageView.snp.makeConstraints { make in
+            make.leading.equalTo(titleLabel.snp.trailing)
+            make.top.bottom.equalTo(self.contentView)
+            make.trailing.equalTo(self.contentView).offset(-HighlightIntroCellUX.margin/2)
+        }
+
+        descriptionLabel.snp.makeConstraints { make in
+            make.leading.trailing.equalTo(titleLabel)
+            make.top.equalTo(titleLabel.snp.bottom).offset(HighlightIntroCellUX.margin/2)
+        }
+
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
 }
