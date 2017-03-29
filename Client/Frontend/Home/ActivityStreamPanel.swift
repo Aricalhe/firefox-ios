@@ -57,8 +57,10 @@ class ActivityStreamPanel: UICollectionViewController, HomePanel {
         self.telemetry = telemetry ?? ActivityStreamTracker(eventsTracker: PingCentre.clientForTopic(.ActivityStreamEvents, clientID: profile.clientID), sessionsTracker: PingCentre.clientForTopic(.ActivityStreamSessions, clientID: profile.clientID))
 
         super.init(collectionViewLayout: flowLayout)
+//        flowLayout.estimatedItemSize = CGSize(width: self.view.frame.width, height: 300)
         self.collectionView?.delegate = self
         self.collectionView?.dataSource = self
+
 
         collectionView?.addGestureRecognizer(longPressRecognizer)
         self.profile.history.setTopSitesCacheSize(Int32(ASPanelUX.topSitesCacheSize))
@@ -267,7 +269,11 @@ extension ActivityStreamPanel: UICollectionViewDelegateFlowLayout {
             return cellSize
         case .topSites:
             //if there is more than one page of space. then add the pagecontrol offset.
-            return CGSize(width: cellSize.width, height: cellSize.height)
+            let customCell = ASHorizontalScrollCell(frame: CGRect(x: 0, y: 0, width: self.view.frame.size.width, height: 0))
+            customCell.delegate = topSitesManager
+            let layout = customCell.collectionView.collectionViewLayout as! HorizontalFlowLayout
+            let size = layout.calculateContentSize(with: self.view.frame.size.width, height: 0)
+            return CGSize(width: cellSize.width, height: size.height)
         case .highlightIntro:
             //if we should show the highlight intro return cellSize
             return CGSize.zero
@@ -296,7 +302,7 @@ extension ActivityStreamPanel: UICollectionViewDelegateFlowLayout {
         }
 
         // topsites insets
-        return UIEdgeInsets(top: 0, left: topSitesInsets, bottom: 0, right: topSitesInsets)
+        return UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     }
 
     fileprivate func showSiteWithURLHandler(_ url: URL) {

@@ -134,6 +134,10 @@ class AlternateSimpleHighlightCell: UICollectionViewCell {
         }
     }
 
+
+    override func preferredLayoutAttributesFitting(_ layoutAttributes: UICollectionViewLayoutAttributes) -> UICollectionViewLayoutAttributes {
+        return super.preferredLayoutAttributesFitting(layoutAttributes)
+    }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
