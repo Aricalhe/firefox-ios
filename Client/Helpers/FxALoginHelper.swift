@@ -55,6 +55,11 @@ class FxALoginHelper {
             return loginDidFail()
         }
 
+        // If we've got here then we're loading an already logged in account.
+        // At this point, no one is interested if the account is verified or not,
+        // so assume it is.
+        accountVerified = true
+
         guard AppConstants.MOZ_FXA_PUSH else {
             return loginDidSucceed()
         }
